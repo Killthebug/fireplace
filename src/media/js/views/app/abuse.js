@@ -11,9 +11,11 @@ define('views/app/abuse',
         var $this = $(this);
         var slug = $this.find('input[name=app]').val();
         var data = utils.getVars($this.serialize());
-
+        tempdata = data;
+        
         forms.toggleSubmitFormState($this);
-
+        
+        if(data.text.trim().length > 1 ){
         requests.post(urls.api.url('app_abuse'), data).done(function(data) {
             notify({message: gettext('Abuse report submitted. Thanks!')});
             if (!caps.widescreen()) {
@@ -23,8 +25,13 @@ define('views/app/abuse',
             forms.toggleSubmitFormState($this, true);
             notify({message: gettext('There was an issue submitting your abuse report. Please try again later.')});
         });
-    }));
-
+    }
+        else{
+            //forms.toggleSubmitFormState($this, true);
+                notify({message: gettext('Empty Form Data Not Accepted')});
+        }
+    }
+        ));
     z.body.on('click', '.app-report-abuse .button', function(e) {
         // When clicking on Report Abuse link on detail pagje.
         //   - On mobile, navigate to report abuse page.
